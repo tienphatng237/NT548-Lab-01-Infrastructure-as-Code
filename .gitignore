@@ -1,0 +1,40 @@
+########################################
+# Terraform
+########################################
+**/.terraform/*
+**/.terraform.lock.hcl
+
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+########################################
+# Terraform variables
+########################################
+terraform.tfvars
+*.auto.tfvars
+
+########################################
+# SSH Keys (SECURITY)
+########################################
+key_pair/*
+!key_pair/.gitkeep
+
+########################################
+# OS / Editor
+########################################
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+########################################
+# Logs
+########################################
+*.log
