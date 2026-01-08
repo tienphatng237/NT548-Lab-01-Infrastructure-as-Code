@@ -1,0 +1,24 @@
+region = "ap-southeast-1"
+vpc_cidr = "10.0.0.0/16"
+
+public_subnet = {
+  cidr = "10.0.1.0/24"
+  az   = "ap-southeast-1a"
+  name = "public-subnet"
+}
+
+private_subnet = {
+  cidr = "10.0.2.0/24"
+  az   = "ap-southeast-1a"
+  name = "private-subnet"
+}
+
+# ⚠️ IP PUBLIC của máy bạn (ví dụ)
+my_ip = "171.243.60.15/32"
+
+# Amazon Linux 2 – ap-southeast-1
+ami_id = "ami-0df7a207adb9748c7"
+
+# Key pair
+key_name        = "lab-key"
+public_key_path = "../../../key_pair/lab-key.pub"
