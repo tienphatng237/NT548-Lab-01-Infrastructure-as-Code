@@ -1,0 +1,5 @@
+- name: Install Java for Jenkins agent
+  apt:
+    name: openjdk-17-jdk
+    state: present
+  become: yes

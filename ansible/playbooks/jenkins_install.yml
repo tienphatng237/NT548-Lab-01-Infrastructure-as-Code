@@ -1,0 +1,20 @@
+---
+- name: Common setup on Jenkins nodes
+  hosts: jenkins_nodes
+  become: yes
+  roles:
+    - common
+
+- name: Install Jenkins Master
+  hosts: jenkins_master
+  become: yes
+  roles:
+    - docker
+    - jenkins_master
+
+- name: Install Jenkins Worker
+  hosts: jenkins_worker
+  become: yes
+  roles:
+    - docker
+    - jenkins_worker
