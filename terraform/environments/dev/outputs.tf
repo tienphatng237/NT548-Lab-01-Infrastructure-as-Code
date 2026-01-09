@@ -14,10 +14,14 @@ output "nat_gateway_id" {
   value = module.nat.nat_id
 }
 
-output "public_ec2_id" {
-  value = module.public_ec2.instance_id
+output "bastion_public_ip" {
+  value = module.bastion.public_ip
 }
 
-output "private_ec2_id" {
-  value = module.private_ec2.instance_id
+output "jenkins_master_private_ip" {
+  value = module.jenkins_master.private_ip
+}
+
+output "jenkins_worker_private_ip" {
+  value = module.jenkins_worker.private_ip
 }
