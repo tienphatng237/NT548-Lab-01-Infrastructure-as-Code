@@ -1,15 +1,17 @@
 ################################
 # Bastion (Public EC2)
 ################################
-output "public_sg" {
-  description = "Security Group ID for public EC2 (Bastion host)"
-  value       = aws_security_group.public_ec2.id
+output "bastion_sg_id" {
+  value = aws_security_group.bastion.id
 }
 
 ################################
 # Private EC2 (Jenkins Master / Worker)
 ################################
-output "private_sg" {
-  description = "Security Group ID for private EC2 (Jenkins master & worker)"
-  value       = aws_security_group.private_ec2.id
+output "jenkins_master_sg_id" {
+  value = aws_security_group.jenkins_master.id
+}
+
+output "jenkins_worker_sg_id" {
+  value = aws_security_group.jenkins_worker.id
 }

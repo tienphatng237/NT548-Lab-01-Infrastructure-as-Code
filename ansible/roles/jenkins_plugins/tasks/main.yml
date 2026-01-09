@@ -1,0 +1,63 @@
+- name: Wait for Jenkins port to be available
+  wait_for:
+    host: 127.0.0.1
+    port: 8080
+    timeout: 300
+  become: true
+  tags: jenkins_plugins
+
+
+- name: Ensure Jenkins directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: '0755'
+  loop:
+    - /opt/jenkins
+    - /var/lib/jenkins/plugins
+  become: true
+  tags: jenkins_plugins
+
+
+- name: Download Jenkins Plugin Manager (pinned version)
+  get_url:
+    url: https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.13.2/jenkins-plugin-manager-2.13.2.jar
+    dest: /opt/jenkins/jenkins-plugin-manager.jar
+    mode: '0755'
+  become: true
+  tags: jenkins_plugins
+
+
+- name: Copy Jenkins plugin list
+  copy:
+    src: plugins.txt
+    dest: /var/lib/jenkins/plugins.txt
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+  become: true
+  tags: jenkins_plugins
+
+
+- name: Install Jenkins plugins
+  command: >
+    java -jar /opt/jenkins/jenkins-plugin-manager.jar
+    --plugin-file /var/lib/jenkins/plugins.txt
+    --plugin-download-directory /var/lib/jenkins/plugins
+  args:
+    creates: /var/lib/jenkins/plugins/.plugins_installed
+  notify: Restart Jenkins
+  become: true
+  tags: jenkins_plugins
+
+
+- name: Mark plugin installation done
+  file:
+    path: /var/lib/jenkins/plugins/.plugins_installed
+    state: touch
+    owner: jenkins
+    group: jenkins
+  become: true
+  tags: jenkins_plugins

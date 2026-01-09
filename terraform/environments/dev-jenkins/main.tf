@@ -17,7 +17,9 @@ module "bastion" {
   instance_type      = var.bastion_instance_type
   subnet_id          = data.terraform_remote_state.infra.outputs.public_subnet_id
   key_name           = data.terraform_remote_state.infra.outputs.key_name
-  security_group_ids = [data.terraform_remote_state.infra.outputs.public_sg_id]
+  security_group_ids = [
+    data.terraform_remote_state.infra.outputs.bastion_sg_id
+  ]
 }
 
 ################################
@@ -32,7 +34,9 @@ module "jenkins_master" {
   instance_type      = var.jenkins_master_instance_type
   subnet_id          = data.terraform_remote_state.infra.outputs.private_subnet_id
   key_name           = data.terraform_remote_state.infra.outputs.key_name
-  security_group_ids = [data.terraform_remote_state.infra.outputs.private_sg_id]
+  security_group_ids = [
+    data.terraform_remote_state.infra.outputs.jenkins_master_sg_id
+  ]
 }
 
 ################################
@@ -47,5 +51,7 @@ module "jenkins_worker" {
   instance_type      = var.jenkins_worker_instance_type
   subnet_id          = data.terraform_remote_state.infra.outputs.private_subnet_id
   key_name           = data.terraform_remote_state.infra.outputs.key_name
-  security_group_ids = [data.terraform_remote_state.infra.outputs.private_sg_id]
+  security_group_ids = [
+    data.terraform_remote_state.infra.outputs.jenkins_worker_sg_id
+  ]
 }

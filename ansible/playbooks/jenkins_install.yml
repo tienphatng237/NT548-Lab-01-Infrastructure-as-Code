@@ -11,6 +11,8 @@
   roles:
     - docker
     - jenkins_master
+    - jenkins_plugins
+
 
 - name: Install Jenkins Worker
   hosts: jenkins_worker

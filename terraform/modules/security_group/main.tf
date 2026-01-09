@@ -1,7 +1,7 @@
 ############################
 # Security Group - Bastion #
 ############################
-resource "aws_security_group" "public_ec2" {
+resource "aws_security_group" "bastion" {
   name        = "bastion-sg"
   description = "Allow SSH from personal IP"
   vpc_id      = var.vpc_id
@@ -15,24 +15,21 @@ resource "aws_security_group" "public_ec2" {
   }
 
   egress {
-    description = "Allow all outbound"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "bastion-sg"
-  }
+  tags = { Name = "bastion-sg" }
 }
 
-################################
-# Security Group - Private EC2 #
-################################
-resource "aws_security_group" "private_ec2" {
-  name        = "private-ec2-sg"
-  description = "Allow SSH only from Bastion"
+#################################
+# Security Group - Jenkins Master
+#################################
+resource "aws_security_group" "jenkins_master" {
+  name        = "jenkins-master-sg"
+  description = "SG for Jenkins Master"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -40,26 +37,49 @@ resource "aws_security_group" "private_ec2" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.public_ec2.id]
+    security_groups = [aws_security_group.bastion.id]
   }
 
   ingress {
-  description     = "Jenkins UI from Bastion"
-  from_port       = 8080
-  to_port         = 8080
-  protocol        = "tcp"
-  security_groups = [aws_security_group.public_ec2.id]
+    description     = "Jenkins UI from Bastion"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion.id]
   }
 
   egress {
-    description = "Allow all outbound (via NAT)"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "private-ec2-sg"
+  tags = { Name = "jenkins-master-sg" }
+}
+
+#################################
+# Security Group - Jenkins Worker
+#################################
+resource "aws_security_group" "jenkins_worker" {
+  name        = "jenkins-worker-sg"
+  description = "SG for Jenkins Worker"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description     = "SSH from Jenkins Master"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.jenkins_master.id]
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "jenkins-worker-sg" }
 }
