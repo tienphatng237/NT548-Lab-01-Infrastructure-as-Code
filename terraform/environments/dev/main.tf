@@ -52,26 +52,28 @@ module "sg" {
 }
 
 module "public_ec2" {
-  depends_on = [module.key_pair]
-
   source    = "../../modules/ec2"
   ami       = var.ami_id
   subnet_id = module.public_subnet.subnet_id
   sg_id     = module.sg.public_sg
   key_name  = module.key_pair.key_name
-  name      = "public-ec2"
+  name      = "bastion-ec2"
+
+  associate_public_ip = true
 }
 
-module "private_ec2" {
-  depends_on = [module.key_pair]
 
+module "private_ec2" {
   source    = "../../modules/ec2"
   ami       = var.ami_id
   subnet_id = module.private_subnet.subnet_id
   sg_id     = module.sg.private_sg
   key_name  = module.key_pair.key_name
   name      = "private-ec2"
+
+  associate_public_ip = false
 }
+
 
 module "key_pair" {
   source          = "../../modules/key-pair"

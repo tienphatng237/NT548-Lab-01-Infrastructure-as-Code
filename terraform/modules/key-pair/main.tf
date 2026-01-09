@@ -6,3 +6,4 @@ resource "aws_key_pair" "this" {
     Name = var.key_name
   }
 }
+    
