@@ -43,6 +43,14 @@ resource "aws_security_group" "private_ec2" {
     security_groups = [aws_security_group.public_ec2.id]
   }
 
+  ingress {
+  description     = "Jenkins UI from Bastion"
+  from_port       = 8080
+  to_port         = 8080
+  protocol        = "tcp"
+  security_groups = [aws_security_group.public_ec2.id]
+  }
+
   egress {
     description = "Allow all outbound (via NAT)"
     from_port   = 0
