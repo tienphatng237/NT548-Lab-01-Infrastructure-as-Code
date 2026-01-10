@@ -74,6 +74,15 @@ resource "aws_security_group" "jenkins_worker" {
     security_groups = [aws_security_group.jenkins_master.id]
   }
 
+  ingress {
+  description     = "SSH from Bastion"
+  from_port       = 22
+  to_port         = 22
+  protocol        = "tcp"
+  security_groups = [aws_security_group.bastion.id]
+  }
+
+
   egress {
     from_port   = 0
     to_port     = 0
