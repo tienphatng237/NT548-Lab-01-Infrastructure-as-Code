@@ -38,4 +38,9 @@ Thumbs.db
 # Logs
 ########################################
 *.log
+
+# VSCode
 .vscode/
+
+# Ansible inventory runtime
+ansible/inventories/jenkins.ini
