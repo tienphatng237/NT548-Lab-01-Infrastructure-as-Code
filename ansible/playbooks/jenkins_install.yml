@@ -3,19 +3,25 @@
   hosts: jenkins_nodes
   become: yes
   roles:
-    - common
+    - role: common
+      tags: common
 
 - name: Install Jenkins Master
   hosts: jenkins_master
   become: yes
   roles:
-    - docker
-    - jenkins_master
-    - jenkins_plugins
+    - role: docker
+      tags: docker
+    - role: jenkins_master
+      tags: jenkins_master
+    - role: jenkins_plugins
+      tags: jenkins_plugins
 
 - name: Install Jenkins Worker
   hosts: jenkins_worker
   become: yes
   roles:
-    - docker
-    - jenkins_worker
+    - role: docker
+      tags: docker
+    - role: jenkins_worker
+      tags: jenkins_worker
