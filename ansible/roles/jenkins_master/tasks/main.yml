@@ -1,12 +1,35 @@
 ---
-- name: Install Java (Jenkins requirement)
+# =========================
+# Java 21 for Jenkins
+# =========================
+- name: Remove old Java versions (optional but clean)
   apt:
-    name: openjdk-17-jdk
+    name:
+      - openjdk-11-jdk
+      - openjdk-17-jdk
+    state: absent
+  become: yes
+  tags: java
+
+- name: Install Java 21 (required by Jenkins 2.5+)
+  apt:
+    name: openjdk-21-jdk
     state: present
     update_cache: yes
   become: yes
+  tags: java
 
-- name: Install required packages for Jenkins repository
+- name: Set Java 21 as default
+  alternatives:
+    name: java
+    path: /usr/lib/jvm/java-21-openjdk-amd64/bin/java
+  become: yes
+  tags: java
+
+# =========================
+# Jenkins installation
+# =========================
+- name: Install required packages for Jenkins repo
   apt:
     name:
       - ca-certificates
@@ -14,13 +37,15 @@
       - gnupg
     state: present
   become: yes
+  tags: jenkins
 
-- name: Add Jenkins GPG key (new method)
+- name: Add Jenkins GPG key
   get_url:
     url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
     dest: /usr/share/keyrings/jenkins-keyring.asc
     mode: "0644"
   become: yes
+  tags: jenkins
 
 - name: Add Jenkins apt repository
   apt_repository:
@@ -28,6 +53,7 @@
     state: present
     filename: jenkins
   become: yes
+  tags: jenkins
 
 - name: Install Jenkins
   apt:
@@ -35,10 +61,28 @@
     state: present
     update_cache: yes
   become: yes
+  tags: jenkins
+
+- name: Ensure Jenkins uses Java 21
+  lineinfile:
+    path: /etc/default/jenkins
+    regexp: '^JAVA_HOME='
+    line: 'JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64'
+    create: yes
+  become: yes
+  tags: jenkins
 
 - name: Enable and start Jenkins
   systemd:
     name: jenkins
     enabled: yes
-    state: started
+    state: restarted
   become: yes
+  tags: jenkins
+
+# =========================
+# JCasC
+# =========================
+- import_tasks: jcasc.yml
+  tags:
+    - jcasc

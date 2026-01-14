@@ -3,6 +3,8 @@
   apt:
     update_cache: yes
   become: yes
+  tags:
+    - jenkins_worker
 
 - name: Install required packages
   apt:
@@ -14,19 +16,8 @@
       - lsb-release
     state: present
   become: yes
-
-- name: Install Docker
-  apt:
-    name: docker.io
-    state: present
-  become: yes
-
-- name: Enable and start Docker service
-  service:
-    name: docker
-    state: started
-    enabled: yes
-  become: yes
+  tags:
+    - jenkins_worker
 
 - name: Add ubuntu user to docker group
   user:
@@ -34,6 +25,8 @@
     groups: docker
     append: yes
   become: yes
+  tags:
+    - jenkins_worker
 
 - name: Create Jenkins agent directory
   file:
@@ -43,3 +36,5 @@
     group: ubuntu
     mode: '0755'
   become: yes
+  tags:
+    - jenkins_worker

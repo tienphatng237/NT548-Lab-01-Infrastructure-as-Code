@@ -1,0 +1,31 @@
+jenkins:
+  systemMessage: "Jenkins provisioned by Ansible + JCasC"
+  numExecutors: 0
+
+  nodes:
+    - permanent:
+        name: "jenkins-worker-1"
+        labelString: "docker linux"
+        remoteFS: "/home/ubuntu/jenkins-agent"
+        numExecutors: 1
+        launcher:
+          ssh:
+            host: "10.0.2.22"
+            port: 22
+            credentialsId: "jenkins-worker-ssh"
+            launchTimeoutSeconds: 60
+            maxNumRetries: 5
+            retryWaitTime: 15
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: SYSTEM
+              id: "jenkins-worker-ssh"
+              username: "ubuntu"
+              privateKeySource:
+                directEntry:
+                  privateKey: |
+                    {{ jenkins_worker_private_key | indent(20) }}

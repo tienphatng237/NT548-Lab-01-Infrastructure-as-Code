@@ -1,3 +1,6 @@
+configuration-as-code
+ssh-slaves
+
 git
 workflow-aggregator
 docker-workflow

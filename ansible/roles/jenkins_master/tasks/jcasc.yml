@@ -1,0 +1,16 @@
+---
+- name: Read Jenkins worker SSH private key on control node
+  slurp:
+    src: "{{ ansible_ssh_private_key_file }}"
+  register: worker_key
+  delegate_to: localhost
+  run_once: true
+  become: false
+  tags:
+    - jcasc
+
+- name: Set worker private key fact
+  set_fact:
+    jenkins_worker_private_key: "{{ worker_key.content | b64decode }}"
+  tags:
+    - jcasc

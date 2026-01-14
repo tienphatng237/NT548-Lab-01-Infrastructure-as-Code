@@ -1,20 +1,18 @@
 [bastion]
-bastion ansible_host=<BASTION_PUBLIC_IP> ansible_user=ubuntu
+bastion ansible_host=54.255.170.132 ansible_user=ubuntu
 
 [jenkins_master]
-jenkins-master ansible_host=<MASTER_PRIVATE_IP> ansible_user=ubuntu
+jenkins-master ansible_host=10.0.2.182 ansible_user=ubuntu
 
 [jenkins_worker]
-jenkins-worker ansible_host=<WORKER_PRIVATE_IP> ansible_user=ubuntu
+jenkins-worker ansible_host=10.0.2.104 ansible_user=ubuntu
 
+# Managed nodes (KHÔNG gồm bastion)
 [jenkins_nodes:children]
 jenkins_master
 jenkins_worker
 
 [all:vars]
 ansible_user=ubuntu
-ansible_ssh_private_key_file=/path/to/lab-key
-ansible_ssh_common_args=-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-
-[jenkins_nodes:vars]
-ansible_ssh_extra_args=-o ProxyCommand=ssh\ -i\ /path/to/lab-key\ -W\ %h:%p\ ubuntu@<BASTION_PUBLIC_IP>
+ansible_ssh_private_key_file=/home/tienphatng237/Desktop/NT548-DevOps-Technology/NT548-lab-01-iac/key_pair/lab-key
+ansible_ssh_common_args=-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -i /home/tienphatng237/Desktop/NT548-DevOps-Technology/NT548-lab-01-iac/key_pair/lab-key -W %h:%p ubuntu@54.255.170.132"
